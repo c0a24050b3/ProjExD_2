@@ -48,7 +48,7 @@ def main():
     clock =pg.time.Clock()
     tmr = 0
     
-    def gameover(screen: pg.Surface) -> None: 
+    def gameover(screen: pg.Surface) -> None: #ゲームオーバーの条件
         kuro =pg.Surface((WIDTH,HEIGHT))
         kuro.fill((0,0,0))
         kuro.set_alpha(150)
@@ -79,6 +79,8 @@ def main():
             pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
             avx = vx*bb_accs[min(tmr//500, 9)]
             bb_img = bb_imgs[min(tmr//500, 9)]
+    
+
 
     
 
@@ -117,7 +119,7 @@ def main():
         #if key_lst[pg.K_RIGHT]:
         #    sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
-        if check_bound(kk_rct) !=(True,True):
+        if check_bound(kk_rct) !=(True,True): #壁の爆弾反射
             kk_rct.move_in(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy)
