@@ -70,12 +70,26 @@ def main():
 
         pg.display.update()
         time.sleep(5)
+
+    def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+        bb_accs = [a for a in range(1, 11)]
+        bb_imgs = [b for b in range(1, 10)]
+        for r in range(1, 11): 
+            bb_img = pg.Surface((20*r, 20*r))
+            pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+            avx = vx*bb_accs[min(tmr//500, 9)]
+            bb_img = bb_imgs[min(tmr//500, 9)]
+
     
 
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
+        
+        bb_imgs, bb_accs = init_bb_imgs() 
+        avx = vx*bb_accs[min(tmr//500, 9)] 
+        bb_img = bb_imgs[min(tmr//500, 9)]
         screen.blit(bg_img, [0, 0])
 
         if kk_rct.colliderect(bb_rct): 
