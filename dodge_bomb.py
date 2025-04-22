@@ -1,4 +1,5 @@
 import os
+import random
 import sys
 import pygame as pg
 
@@ -13,6 +14,15 @@ DELTA ={
     pg.K_RIGHT:(+5,0),
 }
 
+def check_bound(rct):
+    yoko,tate=False,False #yokototatehoukounohennsuu
+    if 0 < rct.left <WIDTH: #gamennnaidattara
+        yoko=True
+    if 0 < rct.top <HEIGHT:
+        tate=True
+    return yoko,tate
+
+ 
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -21,7 +31,12 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
+    bb_img = pg.Surface((20, 20)) 
+    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    bb_rct = bb_img.get_rect()
+    bb_rct.center = random.randint(0,WIDTH),random.randint(0,HEIGHT)
     clock = pg.time.Clock()
+    vx,vy=+5,+5
     tmr = 0
     while True:
         for event in pg.event.get():
@@ -47,6 +62,10 @@ def main():
         #    sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
+        bb_rct.move_ip(vx,vy)
+        screen.blit(bb_img, bb_rct)
+        bb_rct.move_ip(vx,vy)
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
