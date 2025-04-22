@@ -14,12 +14,17 @@ DELTA ={
     pg.K_RIGHT:(+5,0),
 }
 
-def check_bound(rct):
-    yoko,tate=False,False #yokototatehoukounohennsuu
-    if 0 < rct.left <WIDTH: #gamennnaidattara
-        yoko=True
-    if 0 < rct.top <HEIGHT:
-        tate=True
+def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
+    """
+    引数が：こうかとんRectまたは爆弾Rect
+    戻り値：判定結果タプル（横、縦）
+    画面内ならTrue､外ならFaluse
+    """
+    yoko,tate=True,True #yokototatehoukounohennsuu
+    if rct.left <0 or WIDTH < rct.right: #gamennnaidattara
+        yoko=False
+    if rct.top <0 or HEIGHT <rct.bottom :
+        tate=False
     return yoko,tate
 
  
@@ -42,7 +47,11 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-        screen.blit(bg_img, [0, 0]) 
+        screen.blit(bg_img, [0, 0])
+
+        if kk_rct.colliderect(bb_rct):
+            print("Game Over")
+            return 
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
@@ -61,13 +70,19 @@ def main():
         #if key_lst[pg.K_RIGHT]:
         #    sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) !=(True,True):
+            kk_rct.move_in(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy)
         screen.blit(bb_img, bb_rct)
-        bb_rct.move_ip(vx,vy)
-
+        yoko,tate=check_bound(bb_rct)
+        print(yoko)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
         pg.display.update()
-        tmr += 1
+        tmr *= 1
         clock.tick(50)
 
 
