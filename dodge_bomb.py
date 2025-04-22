@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -13,6 +14,7 @@ DELTA ={
     pg.K_LEFT:(-5,0),
     pg.K_RIGHT:(+5,0),
 }
+
 
 def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     """
@@ -27,7 +29,7 @@ def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
         tate=False
     return yoko,tate
 
- 
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -43,15 +45,45 @@ def main():
     bb_rct.center = random.randint(0,WIDTH),random.randint(0,HEIGHT)
     clock = pg.time.Clock()
     vx,vy=+5,+5
+    clock =pg.time.Clock()
     tmr = 0
+    
+    def gameover(screen: pg.Surface) -> None: 
+        kuro =pg.Surface((WIDTH,HEIGHT))
+        kuro.fill((0,0,0))
+        kuro.set_alpha(150)
+        screen.blit(kuro,(0,0)) 
+
+        kk_cry=pg.image.load("fig/8.png")
+        kk_cry1_rect=kk_cry.get_rect(center=(WIDTH//3,HEIGHT//2))
+        kk_cry2_rect=kk_cry.get_rect(center=(2*WIDTH//3,HEIGHT//2))
+        screen.blit(kk_cry,kk_cry1_rect)
+        screen.blit(kk_cry,kk_cry2_rect)
+
+        font =pg.font.Font(None,80)
+        txt = font.render("Game Over",True,(255,255,255))
+        txt_rect = txt.get_rect(center=(WIDTH//2,HEIGHT//2))
+
+        screen.blit(txt,txt_rect)
+
+        
+
+        pg.display.update()
+        time.sleep(5)
+    
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
         screen.blit(bg_img, [0, 0])
 
+        if kk_rct.colliderect(bb_rct): 
+            gameover(screen)
+
         if kk_rct.colliderect(bb_rct):
             print("Game Over")
+            
             return 
 
         key_lst = pg.key.get_pressed()
